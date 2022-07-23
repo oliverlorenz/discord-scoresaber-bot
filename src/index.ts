@@ -96,10 +96,18 @@ const scoresaberConnectPromise = new Promise(
           badCuts: json.commandData.score.badCuts,
         },
       };
+      console.log(entry.player.steamId);
 
       const hasConfiguredSteamUsers = steamUserIdsToWatch.length !== 0;
       const isSteamUserToWatch = steamUserIdsToWatch.includes(
-        entry.player.steamId.toString()
+        entry.player.steamId
+      );
+
+      console.log(
+        entry.player.steamId,
+        hasConfiguredSteamUsers,
+        isSteamUserToWatch,
+        !hasConfiguredSteamUsers || isSteamUserToWatch
       );
 
       if (!hasConfiguredSteamUsers || isSteamUserToWatch) {
@@ -124,25 +132,11 @@ const scoresaberConnectPromise = new Promise(
               name: "Leaderboard Link",
               value: entry.song.scoresaberLink,
             },
+          ])
+          .addFields([
             {
               name: "Difficulty",
               value: entry.song.difficulty,
-            },
-            {
-              name: "Missed notes",
-              value: entry.score.missedNotes,
-            },
-            {
-              name: "Bad cuts",
-              value: entry.score.badCuts,
-            },
-            {
-              name: "Full combo",
-              value: entry.score.fullCombo ? "Yes" : "No",
-            },
-            {
-              name: "Score",
-              value: entry.score.modifiedScore,
             },
           ]);
         // @ts-ignore
