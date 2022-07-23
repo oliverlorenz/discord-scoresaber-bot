@@ -19,6 +19,8 @@ const steamUserIdsToWatch: string[] = env.STEAM_USER_IDS
   ? env.STEAM_USER_IDS.split(",").map((rawSteamUserId) => rawSteamUserId.trim())
   : [];
 
+console.log(steamUserIdsToWatch);
+
 const discordConnectPromise = new Promise(
   (resolve: (value: AnyChannel) => void) => {
     const client = new Client({
@@ -53,6 +55,8 @@ const scoresaberConnectPromise = new Promise(
     scoresaberConnectPromise,
   ]);
   console.log("start watching");
+  // @ts-ignore
+  channel.send("start watching");
 
   let messagesSeenCount = 0;
   let relevantMessagesSeenCount = 0;
@@ -95,7 +99,7 @@ const scoresaberConnectPromise = new Promise(
 
       const hasConfiguredSteamUsers = steamUserIdsToWatch.length !== 0;
       const isSteamUserToWatch = steamUserIdsToWatch.includes(
-        entry.player.steamId
+        entry.player.steamId.toString()
       );
 
       if (!hasConfiguredSteamUsers || isSteamUserToWatch) {
@@ -120,6 +124,26 @@ const scoresaberConnectPromise = new Promise(
               name: "Leaderboard Link",
               value: entry.song.scoresaberLink,
             },
+            {
+              name: "Difficulty",
+              value: entry.song.difficulty,
+            },
+            {
+              name: "Missed notes",
+              value: entry.score.missedNotes,
+            },
+            {
+              name: "Bad cuts",
+              value: entry.score.badCuts,
+            },
+            {
+              name: "Full combo",
+              value: entry.score.fullCombo ? "Yes" : "No",
+            },
+            {
+              name: "Score",
+              value: entry.score.modifiedScore,
+            },
           ]);
         // @ts-ignore
         channel.send({ embeds: [exampleEmbed] });
@@ -130,14 +154,6 @@ const scoresaberConnectPromise = new Promise(
           );
         }
       }
-
-      // channel.send(
-      //   `**${entry.player.name}** hat ["${entry.song.name}" von "${
-      //     entry.song.author
-      //   }"](http://google,de) auf ${
-      //     entry.song.difficulty.split("_")[1]
-      //   } gespielt`
-      // );
     } catch {}
   });
 })();

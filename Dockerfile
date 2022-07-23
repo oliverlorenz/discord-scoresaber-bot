@@ -1,5 +1,5 @@
 # First stage: compile things.
-FROM node:16 AS build
+FROM node:16-alpine AS build
 WORKDIR /usr/src/app
 
 # (Install OS dependencies; include -dev packages if needed.)
@@ -16,7 +16,7 @@ RUN npx tsc -p ./tsconfig.json
 # Now /usr/src/app/dist has the built files.
 
 # Second stage: run things.
-FROM node:16
+FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # (Install OS dependencies; just libraries.)
